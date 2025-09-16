@@ -1,10 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Tegn fraktal</title>
 </head>
 <body>
-$END$
+<canvas width="600" height="300"></canvas>
+<script>
+    let canvas = document.querySelector("canvas");
+    let cx = canvas.getContext("2d");
+    let hue = 0; // start color
+
+    function branch(length, angle, scale) {
+        // Use hue-based color
+        cx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+        cx.fillRect(0, 0, 1, length);
+        if (length < 8) return;
+
+        cx.save();
+        cx.translate(0, length);
+        cx.rotate(-angle);
+        branch(length * scale, angle, scale);
+        cx.rotate(2 * angle);
+        branch(length * scale, angle, scale);
+        cx.restore();
+    }
+
+    function draw() {
+        hue = (hue + 1) % 360; // cycle hue 0–359
+        cx.clearRect(0, 0, canvas.width, canvas.height);
+        cx.save();
+        cx.translate(canvas.width / 2, 0);
+        branch(60, 0.5, 0.8);
+        cx.restore();
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+</script>
 </body>
 </html>
